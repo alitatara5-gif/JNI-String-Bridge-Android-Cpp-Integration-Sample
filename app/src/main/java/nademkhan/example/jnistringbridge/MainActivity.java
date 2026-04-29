@@ -11,11 +11,13 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity {
 
     static {
-        // Load library JNI/C++ kita
+        // 1. WAJIB URUT: Nyalakan mesin Go dulu!
+        System.loadLibrary("bigo_engine");
+        // 2. Baru nyalakan jembatan C++ nya
         System.loadLibrary("native-lib");
     }
 
-    // Deklarasi fungsi native yang ada di Go (lewat native-lib.cpp)
+    // Deklarasi fungsi native yang ada di Go (lewat nader.cpp)
     public native void StartBigoEngine(String id, String ffmpegPath);
     public native void StopBigoEngine(String id);
 
