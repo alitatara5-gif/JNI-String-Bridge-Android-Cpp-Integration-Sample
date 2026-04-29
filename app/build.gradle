@@ -41,9 +41,10 @@ android {
 }
 
 dependencies {
-    // Versi HTTPS-GPL yang lebih spesifik
-    implementation 'com.arthenica:ffmpeg-kit-https-gpl:4.5'
+    // Jalur Resmi & Stabil FFmpeg Kit (Full GPL untuk dukungan HTTPS)
+    implementation 'com.arthenica:ffmpeg-kit-full-gpl:4.5.LTS'
 
+    // Library pendukung tampilan Android
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
