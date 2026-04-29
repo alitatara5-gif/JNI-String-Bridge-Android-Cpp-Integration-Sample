@@ -6,8 +6,8 @@ add_library(bigo_engine SHARED IMPORTED)
 set_target_properties(bigo_engine PROPERTIES IMPORTED_LOCATION
     ${CMAKE_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libbigo_engine.so)
 
-# 2. Buat library jembatan native-lib
-add_library(native-lib SHARED native-lib.cpp)
+# 2. Buat library jembatan (UBAH NAMA FILENYA JADI nader.cpp)
+add_library(native-lib SHARED nader.cpp)
 
 # 3. Cari library log bawaan Android
 find_library(log-lib log)
