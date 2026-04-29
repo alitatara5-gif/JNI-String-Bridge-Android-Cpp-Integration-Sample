@@ -1,17 +1,15 @@
-pluginManagement {
+// Top-level build file
+buildscript {
     repositories {
         google()
         mavenCentral()
-        gradlePluginPortal()
+    }
+    dependencies {
+        // Alat rakit versi stabil
+        classpath 'com.android.tools.build:gradle:8.2.2'
     }
 }
-dependencyResolutionManagement {
-    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-    repositories {
-        google()
-        mavenCentral() // WAJIB: Pintu masuk ke FFmpeg
-        maven { url 'https://jitpack.io' }
-    }
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
 }
-rootProject.name = "JNI-String-Bridge-Android-Cpp-Integration-Sample"
-include ':app'
