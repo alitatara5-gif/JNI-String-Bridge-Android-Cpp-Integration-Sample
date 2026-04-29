@@ -82,7 +82,7 @@ typedef struct { void *data; GoInt len; GoInt cap; } GoSlice;
 extern "C" {
 #endif
 
-extern void StartBigoEngine(char* cID, char* cFFmpegPath);
+extern void StartBigoEngine(char* cID, char* _);
 extern void StopBigoEngine(char* cID);
 
 #ifdef __cplusplus
