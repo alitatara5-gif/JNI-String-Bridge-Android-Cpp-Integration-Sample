@@ -28,8 +28,8 @@ android {
 }
 
 dependencies {
-    // Mesin FFmpeg buat Bigo (HTTPS Support)
-    implementation 'com.arthenica:ffmpeg-kit-full-gpl:4.5.LTS'
+    // Kita coba versi 4.5 yang paling universal
+    implementation 'com.arthenica:ffmpeg-kit-full-gpl:4.5'
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
