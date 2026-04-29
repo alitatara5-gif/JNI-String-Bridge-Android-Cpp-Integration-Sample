@@ -16,13 +16,12 @@ import androidx.appcompat.app.AppCompatActivity;
 public class MainActivity extends AppCompatActivity {
 
     static {
-        // 1. Nyalakan mesin Go
+        // Urutan ini harga mati, Bang!
         System.loadLibrary("bigo_engine");
-        // 2. Nyalakan jembatan C++
         System.loadLibrary("native-lib");
     }
 
-    // Deklarasi fungsi native
+    // Deklarasi ini harus sinkron sama nader.cpp
     public native void StartBigoEngine(String id, String ffmpegPath);
     public native void StopBigoEngine(String id);
 
@@ -31,28 +30,19 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // OTOMATIS MINTA IZIN FILE (Khusus Android 11 ke atas)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            if (!Environment.isExternalStorageManager()) {
-                try {
-                    Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
-                    intent.addCategory("android.intent.category.DEFAULT");
-                    intent.setData(Uri.parse(String.format("package:%s", getPackageName())));
-                    startActivity(intent);
-                } catch (Exception e) {
-                    Intent intent = new Intent();
-                    intent.setAction(Settings.ACTION_MANAGE_ALL_FILES_ACCESS_PERMISSION);
-                    startActivity(intent);
-                }
-            }
+        // Minta Izin "Akses Semua File" (Wajib biar Go bisa nulis MP4)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R && !Environment.isExternalStorageManager()) {
+            Intent intent = new Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION);
+            intent.setData(Uri.parse("package:" + getPackageName()));
+            startActivity(intent);
         }
 
         WebView myWebView = findViewById(R.id.webview_dashboard);
         WebSettings webSettings = myWebView.getSettings();
-        
         webSettings.setJavaScriptEnabled(true);
         webSettings.setDomStorageEnabled(true); 
 
+        // Jembatan HTML -> Java
         myWebView.addJavascriptInterface(new WebAppInterface(), "AndroidBridge");
         myWebView.setWebViewClient(new WebViewClient());
         myWebView.loadUrl("file:///android_asset/index.html");
@@ -61,13 +51,12 @@ public class MainActivity extends AppCompatActivity {
     public class WebAppInterface {
         @JavascriptInterface
         public void startRecording(String userID) {
-            Toast.makeText(MainActivity.this, "Mulai merekam ID: " + userID, Toast.LENGTH_SHORT).show();
-            StartBigoEngine(userID, "ffmpeg");
+            // Kita kirim "" (teks kosong) karena mesin Go sudah bawa FFmpeg sendiri
+            StartBigoEngine(userID, "");
         }
 
         @JavascriptInterface
         public void stopRecording(String userID) {
-            Toast.makeText(MainActivity.this, "Stop rekaman ID: " + userID, Toast.LENGTH_SHORT).show();
             StopBigoEngine(userID);
         }
     }
