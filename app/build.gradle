@@ -9,11 +9,29 @@ android {
 
     defaultConfig {
         applicationId "nademkhan.example.jnistringbridge"
-        // INI YANG DIUBAH BANG, NAIK JADI 24
+        // Target Android 7.0 ke atas agar cocok dengan FFmpeg
         minSdk 24
         targetSdk 34
         versionCode 1
         versionName "1.0"
+
+        // KUNCI JAWABAN: Cukup rakit untuk mesin 64-bit saja (Sesuai mesin Go Abang)
+        ndk {
+            abiFilters 'arm64-v8a'
+        }
+
+        externalNativeBuild {
+            cmake {
+                cppFlags ""
+            }
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
     }
 
     externalNativeBuild {
@@ -29,9 +47,10 @@ android {
 }
 
 dependencies {
-    // Mesin FFmpeg Komunitas (Sudah berhasil ter-download!)
+    // Mesin FFmpeg dari Komunitas (Barang sudah pasti ada dan bisa di-download)
     implementation 'io.github.jamaismagic.ffmpeg:ffmpeg-kit-main-16kb:6.1.7'
 
+    // Onderdil bawaan Android
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
