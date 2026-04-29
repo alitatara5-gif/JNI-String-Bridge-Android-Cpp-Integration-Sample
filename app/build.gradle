@@ -21,16 +21,16 @@ android {
         }
     }
 
-    externalNativeBuild {
-        cmake {
-            path "src/main/cpp/CMakeLists.txt"
-        }
-    }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
         }
     }
 
@@ -41,10 +41,9 @@ android {
 }
 
 dependencies {
-    // JALUR RESMI & LENGKAP: FFmpeg Kit Full (Dukungan HTTPS & Codec Lengkap)
-    implementation 'com.arthenica:ffmpeg-kit-full-gpl:4.5.LTS'
+    // Versi HTTPS-GPL yang lebih spesifik
+    implementation 'com.arthenica:ffmpeg-kit-https-gpl:4.5'
 
-    // Library Dasar Android
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
