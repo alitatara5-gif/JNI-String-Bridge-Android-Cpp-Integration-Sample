@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="id">
 <head>
@@ -6,125 +5,146 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Live Recorder POSIX</title>
 <style>
-    :root { --primary: #1A73E8; --bg: #F8F9FA; --text: #202124; --card-bg: #FFFFFF; }
+    :root { --primary: #1F4E79; /* Biru lebih gelap sesuai gambar */ --bg: #F8F9FA; --text: #202124; --card-bg: #FFFFFF; }
     body { font-family: 'Roboto', sans-serif; margin: 0; background-color: var(--bg); color: var(--text); padding-bottom: 70px; }
     
     /* Header & Input Section */
-    .header { background: white; padding: 20px; border-bottom: 1px solid #E0E0E0; position: sticky; top: 0; z-index: 100; }
-    .app-title { font-size: 20px; font-weight: 500; color: var(--text); margin-bottom: 20px; }
+    .header { background: var(--primary); padding: 15px 20px; position: sticky; top: 0; z-index: 100; color: white; display: flex; justify-content: space-between; align-items: center;}
+    .app-title { font-size: 18px; font-weight: 500; }
+    .shield-icon { font-size: 18px; }
+    
+    .input-container { background: white; padding: 20px; border-bottom: 1px solid #E0E0E0; }
     .input-group { position: relative; margin-bottom: 15px; }
-    .input-label { position: absolute; top: -10px; left: 12px; background: white; padding: 0 5px; color: #5F6368; font-size: 12px; }
-    input[type="text"] { width: 100%; padding: 15px; border: 1px solid #DADCE0; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
-    .btn-add { width: 100%; padding: 15px; background-color: var(--primary); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; }
+    .input-label { position: absolute; top: -8px; left: 12px; background: white; padding: 0 5px; color: #1F4E79; font-size: 12px; font-weight: bold; }
+    .input-title { font-size: 14px; font-weight: bold; margin-bottom: 10px; display: block;}
+    input[type="text"] { width: 100%; padding: 12px; border: 2px solid #1F4E79; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+    .btn-add { width: 100%; padding: 12px; background-color: var(--primary); color: white; border: none; border-radius: 25px; font-size: 15px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; }
 
     /* Active Recorders Section */
     .recorder-section { padding: 15px; }
-    .section-header { display: flex; justify-content: space-between; align-items: center; color: #5F6368; font-size: 14px; margin-bottom: 10px; }
-    .no-recordings { text-align: center; color: #80868B; margin-top: 50px; font-size: 14px; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; background: #E8F0FE; padding: 10px 15px; border-radius: 8px; color: #1F4E79; font-size: 13px; font-weight: bold; margin-bottom: 15px; }
+    .no-recordings { text-align: center; color: #80868B; margin-top: 30px; font-size: 13px; line-height: 1.5; }
 
-    /* Recorder Card Style */
-    .card { background: var(--card-bg); border-radius: 12px; padding: 15px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); display: flex; gap: 15px; align-items: center; }
-    .profile-pic { width: 60px; height: 60px; border-radius: 8px; background: #EEE; }
-    .info-area { flex-grow: 1; }
-    .id-status { display: flex; align-items: center; gap: 8px; }
-    .status-dot { width: 10px; height: 10px; border-radius: 50%; }
-    .status-recording { background-color: #34A853; } /* Hijau */
-    .status-connecting { background-color: #FBBC05; } /* Kuning */
-    .bigo-id { font-weight: 500; font-size: 16px; }
-    .nick-dur { color: #5F6368; font-size: 13px; margin-top: 5px; line-height: 1.4; }
-    .btn-stop { padding: 8px 24px; background-color: var(--primary); color: white; border: none; border-radius: 20px; font-size: 14px; font-weight: 500; cursor: pointer; }
+    /* Recorder Card Style (DIUBAH BIAR FOTO DI KANAN) */
+    .card { background: var(--card-bg); border-radius: 12px; padding: 12px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.08); display: flex; justify-content: space-between; border: 1px solid #E0E0E0; }
+    
+    .info-area { flex-grow: 1; display: flex; flex-direction: column; gap: 4px; }
+    .id-row { display: flex; align-items: center; gap: 5px; }
+    .signal-icon { color: #34A853; font-size: 14px; font-weight: bold; }
+    .bigo-id { font-weight: bold; font-size: 16px; color: #333; }
+    
+    .status-row { display: flex; align-items: center; gap: 6px; margin-top: 2px; }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; }
+    .status-recording { background-color: #00E676; box-shadow: 0 0 4px #00E676; } 
+    .status-connecting { background-color: #FFD600; }
+    .status-text { font-size: 11px; font-weight: bold; letter-spacing: 0.5px; }
+    
+    .detail-row { color: #555; font-size: 12px; display: flex; align-items: center; gap: 5px; font-weight: 500;}
+    .detail-icon { font-size: 12px; color: #888;}
+
+    /* Area Foto dan Tombol Stop di Kanan */
+    .action-area { display: flex; flex-direction: column; align-items: flex-end; justify-content: space-between; width: 70px; }
+    .profile-pic { width: 50px; height: 50px; border-radius: 6px; background: #DDD; object-fit: cover; margin-bottom: 8px; }
+    .btn-stop { width: 100%; padding: 6px 0; background-color: var(--primary); color: white; border: none; border-radius: 15px; font-size: 12px; font-weight: bold; cursor: pointer; }
 
     /* Bottom Navigation */
-    .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: white; border-top: 1px solid #E0E0E0; display: flex; justify-content: space-around; align-items: center; }
-    .nav-item { text-align: center; color: #80868B; font-size: 12px; text-decoration: none; }
+    .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 55px; background: white; border-top: 1px solid #E0E0E0; display: flex; justify-content: space-around; align-items: center; }
+    .nav-item { text-align: center; color: #80868B; font-size: 10px; text-decoration: none; font-weight: bold; display: flex; flex-direction: column; gap: 2px;}
     .nav-item.active { color: var(--primary); }
-    .nav-icon { font-size: 20px; margin-bottom: 4px; }
+    .nav-icon { font-size: 20px; }
 </style>
 </head>
 <body>
 
 <div class="header">
     <div class="app-title">Live Recorder POSIX</div>
+    <div class="shield-icon">🛡️</div>
+</div>
+
+<div class="input-container">
+    <span class="input-title">Enter ID (or "stop ID")</span>
     <div class="input-group">
-        <span class="input-label">Enter ID (or "stop ID")</span>
+        <span class="input-label">ID3</span>
         <input type="text" id="bigoIDInput" placeholder="Bigo ID (e.g., Loveeeshy)">
     </div>
     <button class="btn-add" onclick="handleAddID()">
-        <span style="font-size:20px">+</span> Add ID
+        <span style="font-size:18px; font-weight:bold;">+</span> Add ID
     </button>
 </div>
 
 <div class="recorder-section">
     <div class="section-header">
         <span>Active Recorders</span>
-        <span>Workers: <span id="workerCount">0/20</span> ^</span>
+        <span>Workers: <span id="workerCount">0/20</span> ⌃</span>
     </div>
     
     <div id="recordingList">
         <div class="no-recordings" id="noRecordingsMsg">
             No active recordings.<br>Add an ID above.
         </div>
-        
-        </div>
+    </div>
 </div>
 
 <div class="bottom-nav">
-    <a href="#" class="nav-item active"><div class="nav-icon">📊</div>Dashboard</a>
+    <a href="#" class="nav-item active"><div class="nav-icon">🟦</div>Dashboard</a>
     <a href="#" class="nav-item"><div class="nav-icon">⚙️</div>Settings</a>
     <a href="#" class="nav-item"><div class="nav-icon">ℹ️</div>Info</a>
 </div>
 
 <script>
-    // FUNGSI JEMBATAN KE GO (HANYA CONTOH LOGIKA UI)
-    
-    // Dipanggil saat tombol "Add ID" diklik
     function handleAddID() {
         const input = document.getElementById('bigoIDInput');
         const id = input.value.trim();
         if (id) {
-            // !!! INI PANGGILAN SAKTI KE JAVA -> GO !!!
             if (typeof AndroidBridge !== 'undefined') {
                 AndroidBridge.startRecording(id); 
             }
             input.value = '';
-            // Logika UI buat nambahin card baru (di Android aslinya, Go yang bakal ngirim update)
-            addDemoCard(id, 'Connecting...', 'status-connecting');
+            
+            // Contoh nambahin kartu dengan foto di kanan
+            addDemoCard(id, 'User Baru', 'status-connecting', 'CONNECTING');
             updateWorkerCount(1);
         }
     }
 
-    // Dipanggil saat tombol "Stop" di card diklik
     function handleStop(id) {
-        // !!! INI PANGGILAN SAKTI KE JAVA -> GO !!!
         if (typeof AndroidBridge !== 'undefined') {
             AndroidBridge.stopRecording(id);
         }
-        // Logika UI buat hapus card (di Android aslinya, Go yang bakal konfirmasi stop)
         removeCard(id);
         updateWorkerCount(-1);
     }
 
-    // --- Fungsi Helper UI (Buat demo tampilan) ---
-    function addDemoCard(id, nick, statusClass) {
+    function addDemoCard(id, nick, statusClass, statusText) {
         document.getElementById('noRecordingsMsg').style.display = 'none';
         const list = document.getElementById('recordingList');
+        
+        // Perhatikan struktur HTML Card ini sudah disesuaikan persis dengan gambar
         const cardHtml = `
             <div class="card" id="card-${id}">
-                <div class="profile-pic"></div>
                 <div class="info-area">
-                    <div class="id-status">
-                        <div class="status-dot ${statusClass}"></div>
+                    <div class="id-row">
+                        <span class="signal-icon">📶</span>
                         <span class="bigo-id">${id}</span>
                     </div>
-                    <div class="nick-dur">
-                        Nick: ${nick}<br>
-                        Dur: 00:00:00
+                    <div class="status-row">
+                        <div class="status-dot ${statusClass}"></div>
+                        <span class="status-text">${statusText}</span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-icon">👤</span> Nick: ${nick}
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-icon">⏱️</span> Dur: 00:00:00
                     </div>
                 </div>
-                <button class="btn-stop" onclick="handleStop('${id}')">Stop</button>
+                <div class="action-area">
+                    <img src="https://via.placeholder.com/50" class="profile-pic" alt="Thumb">
+                    <button class="btn-stop" onclick="handleStop('${id}')">Stop</button>
+                </div>
             </div>
         `;
-        list.insertAdjacentHTML('beforeend', cardHtml);
+        list.insertAdjacentHTML('afterbegin', cardHtml); // Card baru muncul di atas
     }
 
     function removeCard(id) {
