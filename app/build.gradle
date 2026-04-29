@@ -1,7 +1,51 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    compileSdk 34
+    namespace "nademkhan.example.jnistringbridge"
+    // Versi NDK sesuai bawaan asli Abang
+    ndkVersion "25.2.9519653"
+	
+    defaultConfig {
+        applicationId "nademkhan.example.jnistringbridge"
+        minSdk 21
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+        
+        externalNativeBuild {
+            cmake {
+                cppFlags ""
+            }
+        }
+    }
+
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+        }
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
 dependencies {
-    // Mesin FFmpeg Kit Full HTTPS (Ditarik otomatis oleh GitHub)
+    // Jalur Langit: FFmpeg Kit Full HTTPS (Wajib buat Bigo)
     implementation 'com.artyomkhachatryan:ffmpeg-kit-https-gpl:4.5.LTS'
 
+    // Library Standar Android agar aplikasi tidak crash
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
