@@ -1,24 +1,20 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
-
+// Top-level build file
 buildscript {
     repositories {
-        google()            // Wajib ada
-        mavenCentral()      // Wajib ada untuk narik FFmpeg
+        google()
+        mavenCentral()
         maven { url 'https://jitpack.io' }
-        maven { url "https://plugins.gradle.org/m2/" }
     }
-
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.4.0-alpha07'
+        classpath 'com.android.tools.build:gradle:8.2.2'
     }
 }
 
 allprojects {
     repositories {
-        google()            // Wajib ada
-        mavenCentral()      // Wajib ada untuk narik FFmpeg
+        google()
+        mavenCentral()
         maven { url 'https://jitpack.io' }
-        maven { url "https://plugins.gradle.org/m2/" }
     }
 }
 
