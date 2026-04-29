@@ -1,16 +1,14 @@
 cmake_minimum_required(VERSION 3.22.1)
 project("posix_bridge")
 
-# 1. Daftarkan Library Go Abang
-add_library(bigo_engine SHARED IMPORTED)
-set_target_properties(bigo_engine PROPERTIES IMPORTED_LOCATION
-    ${CMAKE_SOURCE_DIR}/../jniLibs/${ANDROID_ABI}/libbigo_engine.so)
-
-# 2. Buat library jembatan (UBAH NAMA FILENYA JADI nader.cpp)
+# 1. Buat library jembatan
 add_library(native-lib SHARED nader.cpp)
 
-# 3. Cari library log bawaan Android
+# 2. Cari library log bawaan Android
 find_library(log-lib log)
 
-# 4. LAS JADI SATU!
+# 3. Kasih tau CMake letak folder mesin Go Abang (Biar dia nggak nyatet alamat server)
+target_link_directories(native-lib PRIVATE ${CMAKE_SOURCE_DIR}/../jniLibs/${ANDROID_ABI})
+
+# 4. LAS JADI SATU! (Cukup sebut namanya "bigo_engine", jangan pakai jalur lengkap)
 target_link_libraries(native-lib bigo_engine ${log-lib})
