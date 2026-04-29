@@ -9,7 +9,8 @@ android {
 
     defaultConfig {
         applicationId "nademkhan.example.jnistringbridge"
-        minSdk 21
+        // INI YANG DIUBAH BANG, NAIK JADI 24
+        minSdk 24
         targetSdk 34
         versionCode 1
         versionName "1.0"
@@ -28,8 +29,7 @@ android {
 }
 
 dependencies {
-    // Menggunakan Backup Komunitas (Karena server Arthenica sudah ditutup permanen)
-    // Ini file 52MB yang Abang temukan, sudah di-hosting di server baru
+    // Mesin FFmpeg Komunitas (Sudah berhasil ter-download!)
     implementation 'io.github.jamaismagic.ffmpeg:ffmpeg-kit-main-16kb:6.1.7'
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
