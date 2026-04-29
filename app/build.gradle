@@ -9,13 +9,12 @@ android {
 
     defaultConfig {
         applicationId "nademkhan.example.jnistringbridge"
-        // Target Android 7.0 ke atas agar cocok dengan FFmpeg
         minSdk 24
         targetSdk 34
         versionCode 1
         versionName "1.0"
 
-        // KUNCI JAWABAN: Cukup rakit untuk mesin 64-bit saja (Sesuai mesin Go Abang)
+        // Tetap kunci di arm64-v8a biar gak gendut APK-nya
         ndk {
             abiFilters 'arm64-v8a'
         }
@@ -47,10 +46,9 @@ android {
 }
 
 dependencies {
-    // Mesin FFmpeg dari Komunitas (Barang sudah pasti ada dan bisa di-download)
-    implementation 'io.github.jamaismagic.ffmpeg:ffmpeg-kit-main-16kb:6.1.7'
+    // FFmpeg-kit KITA HAPUS (Karena sudah ada di libbigo_engine.so)
 
-    // Onderdil bawaan Android
+    // Onderdil wajib Android
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
