@@ -5,8 +5,15 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        // Pakai versi stabil 8.2.2
+        // Pakai versi stabil
         classpath 'com.android.tools.build:gradle:8.2.2'
+    }
+}
+
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
     }
 }
 
