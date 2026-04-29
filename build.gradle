@@ -2,10 +2,12 @@
 buildscript {
     repositories {
         google()
-        mavenCentral()
+        mavenCentral() // Wajib paling atas buat FFmpeg
         maven { url 'https://jitpack.io' }
+        maven { url "https://plugins.gradle.org/m2/" }
     }
     dependencies {
+        // Versi stabil untuk Gradle 8.x
         classpath 'com.android.tools.build:gradle:8.2.2'
     }
 }
@@ -13,8 +15,9 @@ buildscript {
 allprojects {
     repositories {
         google()
-        mavenCentral()
+        mavenCentral() // Wajib di sini juga supaya folder 'app' bisa akses
         maven { url 'https://jitpack.io' }
+        maven { url "https://plugins.gradle.org/m2/" }
     }
 }
 
