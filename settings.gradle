@@ -6,11 +6,11 @@ pluginManagement {
     }
 }
 dependencyResolutionManagement {
-    // Pakai FAIL_ON agar tidak bentrok lagi
+    // FAIL_ON_PROJECT_REPOS memastikan tidak ada aturan ganda yang bikin error
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
         google()
-        mavenCentral()
+        mavenCentral() 
         maven { url 'https://jitpack.io' }
     }
 }
