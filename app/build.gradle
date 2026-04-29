@@ -6,25 +6,18 @@ android {
     compileSdk 34
     namespace "nademkhan.example.jnistringbridge"
     ndkVersion "25.2.9519653"
-	
+
     defaultConfig {
         applicationId "nademkhan.example.jnistringbridge"
         minSdk 21
         targetSdk 34
         versionCode 1
         versionName "1.0"
-
-        externalNativeBuild {
-            cmake {
-                path "src/main/cpp/CMakeLists.txt"
-            }
-        }
     }
 
-    buildTypes {
-        release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+    externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
         }
     }
 
@@ -35,7 +28,7 @@ android {
 }
 
 dependencies {
-    // Mesin Utama FFmpeg Full GPL (HTTPS Support)
+    // Mesin FFmpeg buat Bigo (HTTPS Support)
     implementation 'com.arthenica:ffmpeg-kit-full-gpl:4.5.LTS'
 
     implementation 'androidx.appcompat:appcompat:1.6.1'
