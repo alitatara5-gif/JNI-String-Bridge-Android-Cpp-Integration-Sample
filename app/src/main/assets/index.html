@@ -1,1 +1,147 @@
 
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Live Recorder POSIX</title>
+<style>
+    :root { --primary: #1A73E8; --bg: #F8F9FA; --text: #202124; --card-bg: #FFFFFF; }
+    body { font-family: 'Roboto', sans-serif; margin: 0; background-color: var(--bg); color: var(--text); padding-bottom: 70px; }
+    
+    /* Header & Input Section */
+    .header { background: white; padding: 20px; border-bottom: 1px solid #E0E0E0; position: sticky; top: 0; z-index: 100; }
+    .app-title { font-size: 20px; font-weight: 500; color: var(--text); margin-bottom: 20px; }
+    .input-group { position: relative; margin-bottom: 15px; }
+    .input-label { position: absolute; top: -10px; left: 12px; background: white; padding: 0 5px; color: #5F6368; font-size: 12px; }
+    input[type="text"] { width: 100%; padding: 15px; border: 1px solid #DADCE0; border-radius: 8px; box-sizing: border-box; font-size: 16px; }
+    .btn-add { width: 100%; padding: 15px; background-color: var(--primary); color: white; border: none; border-radius: 8px; font-size: 16px; font-weight: 500; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer; }
+
+    /* Active Recorders Section */
+    .recorder-section { padding: 15px; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; color: #5F6368; font-size: 14px; margin-bottom: 10px; }
+    .no-recordings { text-align: center; color: #80868B; margin-top: 50px; font-size: 14px; }
+
+    /* Recorder Card Style */
+    .card { background: var(--card-bg); border-radius: 12px; padding: 15px; margin-bottom: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.12); display: flex; gap: 15px; align-items: center; }
+    .profile-pic { width: 60px; height: 60px; border-radius: 8px; background: #EEE; }
+    .info-area { flex-grow: 1; }
+    .id-status { display: flex; align-items: center; gap: 8px; }
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .status-recording { background-color: #34A853; } /* Hijau */
+    .status-connecting { background-color: #FBBC05; } /* Kuning */
+    .bigo-id { font-weight: 500; font-size: 16px; }
+    .nick-dur { color: #5F6368; font-size: 13px; margin-top: 5px; line-height: 1.4; }
+    .btn-stop { padding: 8px 24px; background-color: var(--primary); color: white; border: none; border-radius: 20px; font-size: 14px; font-weight: 500; cursor: pointer; }
+
+    /* Bottom Navigation */
+    .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; height: 60px; background: white; border-top: 1px solid #E0E0E0; display: flex; justify-content: space-around; align-items: center; }
+    .nav-item { text-align: center; color: #80868B; font-size: 12px; text-decoration: none; }
+    .nav-item.active { color: var(--primary); }
+    .nav-icon { font-size: 20px; margin-bottom: 4px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+    <div class="app-title">Live Recorder POSIX</div>
+    <div class="input-group">
+        <span class="input-label">Enter ID (or "stop ID")</span>
+        <input type="text" id="bigoIDInput" placeholder="Bigo ID (e.g., Loveeeshy)">
+    </div>
+    <button class="btn-add" onclick="handleAddID()">
+        <span style="font-size:20px">+</span> Add ID
+    </button>
+</div>
+
+<div class="recorder-section">
+    <div class="section-header">
+        <span>Active Recorders</span>
+        <span>Workers: <span id="workerCount">0/20</span> ^</span>
+    </div>
+    
+    <div id="recordingList">
+        <div class="no-recordings" id="noRecordingsMsg">
+            No active recordings.<br>Add an ID above.
+        </div>
+        
+        </div>
+</div>
+
+<div class="bottom-nav">
+    <a href="#" class="nav-item active"><div class="nav-icon">📊</div>Dashboard</a>
+    <a href="#" class="nav-item"><div class="nav-icon">⚙️</div>Settings</a>
+    <a href="#" class="nav-item"><div class="nav-icon">ℹ️</div>Info</a>
+</div>
+
+<script>
+    // FUNGSI JEMBATAN KE GO (HANYA CONTOH LOGIKA UI)
+    
+    // Dipanggil saat tombol "Add ID" diklik
+    function handleAddID() {
+        const input = document.getElementById('bigoIDInput');
+        const id = input.value.trim();
+        if (id) {
+            // !!! INI PANGGILAN SAKTI KE JAVA -> GO !!!
+            if (typeof AndroidBridge !== 'undefined') {
+                AndroidBridge.startRecording(id); 
+            }
+            input.value = '';
+            // Logika UI buat nambahin card baru (di Android aslinya, Go yang bakal ngirim update)
+            addDemoCard(id, 'Connecting...', 'status-connecting');
+            updateWorkerCount(1);
+        }
+    }
+
+    // Dipanggil saat tombol "Stop" di card diklik
+    function handleStop(id) {
+        // !!! INI PANGGILAN SAKTI KE JAVA -> GO !!!
+        if (typeof AndroidBridge !== 'undefined') {
+            AndroidBridge.stopRecording(id);
+        }
+        // Logika UI buat hapus card (di Android aslinya, Go yang bakal konfirmasi stop)
+        removeCard(id);
+        updateWorkerCount(-1);
+    }
+
+    // --- Fungsi Helper UI (Buat demo tampilan) ---
+    function addDemoCard(id, nick, statusClass) {
+        document.getElementById('noRecordingsMsg').style.display = 'none';
+        const list = document.getElementById('recordingList');
+        const cardHtml = `
+            <div class="card" id="card-${id}">
+                <div class="profile-pic"></div>
+                <div class="info-area">
+                    <div class="id-status">
+                        <div class="status-dot ${statusClass}"></div>
+                        <span class="bigo-id">${id}</span>
+                    </div>
+                    <div class="nick-dur">
+                        Nick: ${nick}<br>
+                        Dur: 00:00:00
+                    </div>
+                </div>
+                <button class="btn-stop" onclick="handleStop('${id}')">Stop</button>
+            </div>
+        `;
+        list.insertAdjacentHTML('beforeend', cardHtml);
+    }
+
+    function removeCard(id) {
+        const card = document.getElementById(`card-${id}`);
+        if (card) card.remove();
+        if (document.getElementById('recordingList').children.length <= 1) {
+             document.getElementById('noRecordingsMsg').style.display = 'block';
+        }
+    }
+
+    let currentWorkers = 0;
+    function updateWorkerCount(change) {
+        currentWorkers += change;
+        if (currentWorkers < 0) currentWorkers = 0;
+        document.getElementById('workerCount').innerText = `${currentWorkers}/20`;
+    }
+</script>
+
+</body>
+</html>
