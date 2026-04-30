@@ -3,9 +3,8 @@ plugins {
 }
 
 android {
+    namespace 'nademkhan.example.jnistringbridge'
     compileSdk 34
-    namespace "nademkhan.example.jnistringbridge"
-    ndkVersion "25.2.9519653"
 
     defaultConfig {
         applicationId "nademkhan.example.jnistringbridge"
@@ -14,16 +13,9 @@ android {
         versionCode 1
         versionName "1.0"
 
-        // Tetap kunci di arm64-v8a biar gak gendut APK-nya
-        ndk {
-            abiFilters 'arm64-v8a'
-        }
-
-        externalNativeBuild {
-            cmake {
-                cppFlags ""
-            }
-        }
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        
+        // CATATAN: Bagian externalNativeBuild (cmake) di sini sudah DIHAPUS
     }
 
     buildTypes {
@@ -33,23 +25,30 @@ android {
         }
     }
 
-    externalNativeBuild {
-        cmake {
-            path "src/main/cpp/CMakeLists.txt"
-        }
-    }
-
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+
+    // CATATAN: Bagian externalNativeBuild (path CMakeLists.txt) di sini sudah DIHAPUS
+    
+    sourceSets {
+        main {
+            // Memastikan folder assets terbaca untuk menyimpan bigo_multi
+            assets.srcDirs = ['src/main/assets']
+        }
+    }
 }
 
 dependencies {
-    // FFmpeg-kit KITA HAPUS (Karena sudah ada di libbigo_engine.so)
-
-    // Onderdil wajib Android
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    
+    // Library untuk notifikasi Foreground Service
+    implementation 'androidx.core:core:1.12.0'
+    
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 }
